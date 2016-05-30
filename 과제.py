@@ -39,44 +39,38 @@ class GetData:
         
 #### Menu  implementation
 def printMenu():
-    print("\nWelcome! Book Manager Program (xml version)") 
+    print("\n국가정보포털이용프로그램에 오신걸 환영합니다.") 
     print("========Menu==========")
-    print("Get data:  g")
-    print("Print title:   p")
+    print("데이터갱신:  d")
+ 
     print("Print 여행경보:   p1")
     print("Print 국가별 공지사항 목록조회:   p2")
+    print("Print 찾는 국가 대사관 지도 url :     s")
+    print("Print 찾는 국가 연락처 정보 :     c")
     print("Quit program:   q")
     print("==================")
     
 def launcherFunction(menu):
     global BooksDoc
     global loopFlag
-    if menu ==  'g':
+
+    if menu ==  'd':
         getData = GetData()
         getData.main()
     elif menu == 'q':
         loopFlag = 0    
-    elif menu == 'p':
-        PrintTitle()
+
     elif menu == 'p1':
         Print여행경보()
     elif menu == 'p2':
         Print국가별공지사항()
-    elif menu == 'b':
-        PrintBookList(["title",])
-    elif menu == 'a':
-        ISBN = str(input ('insert ISBN :'))
-        title = str(input ('insert Title :'))
-        AddBook({'ISBN':ISBN, 'title':title})
-    elif menu == 'e':
-        keyword = str(input ('input keyword to search :'))
-        printBookList(SearchBookTitle(keyword))
-    elif menu == 'm':
-        keyword = str(input ('input keyword code to the html  :'))
-        html = MakeHtmlDoc(SearchBookTitle(keyword))
-        print("-----------------------")
-        print(html)
-        print("-----------------------")
+    elif menu == 's':
+       지역이름  = str(input ('대사관을 찾는 지역을 입력해주세요 :'))
+    
+       지도url(지역이름)
+    elif menu == 'c':
+        나라이름  = str(input ('연락처를 찾는 지역을 입력해주세요 :'))
+        Print찾는나라연락처(나라이름)
     else:
         print ("error : unknow menu key")
 
@@ -126,7 +120,31 @@ def Print국가별공지사항():
                 print('id : ', c.findtext('id'))
                 print('wrtDt : ', c.findtext('wrtDt'))
                 print('-------------------')
-
+def Print찾는나라연락처(나라이름):
+#   
+    tree = etree.parse('연락처정보.xml')
+  
+    root = tree.getroot()
+    txt=root.find('body').find('items').find('items')
+    
+ 
+#    for a in root.findall('body'):
+#        for b in a.findall('items'):
+#            for c in b.findall('items'):
+#                    print('attentionNote : ', c.findtext('id'))
+#                    print('attentionPartial : ', c.findtext('countryName'))
+#                    print('countryEnName : ', c.findtext('countryEnName'))              
+#                    print('continent : ', c.findtext('continent'))
+#                    print('controlNote : ', c.findtext('contact'))
+#                    print('controlPartial : ', c.findtext('controlPartial'))
+#                    print('wrtDt : ', c.findtext('wrtDt'))
+#                    print('국가국기이미지 : ', c.findtext('imgUrl'))
+#                    print('-------------------')
+  
+                
+def 지도url(지역):
+    url= 'https://www.google.co.kr/maps/search/주+'+지역+'+대한민국+대사관'
+    print(url)
 
 ############### run ###############
 while(loopFlag > 0):
