@@ -131,8 +131,9 @@ def Print찾는나라연락처(나라이름):
         for b in a.findall('items'):
             for c in b.findall('item'):
                 if c.findtext('countryName')==나라이름:
-                    print(c.findtext('contact')
+                    print(c.findtext('contact'))
                    
+
                 
 def 지도url(지역):
     url= 'https://www.google.co.kr/maps/search/주+'+지역+'+대한민국+대사관'
