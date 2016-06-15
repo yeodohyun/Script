@@ -10,8 +10,7 @@ import xml.etree.ElementTree as etree
 ##### global
 loopFlag = 1
 xmlFD = -1
-BooksDoc = None
-
+즐겨찾기나라="현재 추가안됨"
 ##### getdata class
 class GetData:
     페이지설정="&numOfRows=999&pageSize=999&pageNo=1&startPage=1"
@@ -46,7 +45,10 @@ def printMenu():
     print("2. 국가별 공지사항 목록조회:   p2")
     print("3. 대사관 지도 url :     s")
     print("4. 비상 연락망 검색 :     c")
+    print("5.즐겨찾기★: u",즐겨찾기나라)    
+    print("6.즐겨찾기 추가 : m")    
     print("Quit program:   q")
+    
     print("==================")
     
 def launcherFunction(menu):
@@ -58,12 +60,12 @@ def launcherFunction(menu):
         getData.main()
     elif menu == 'q':
         loopFlag = 0    
-    elif menu == 'a':
-        title = str(input ('insert 제목 :'))
-        fileUrl = str(input ('insert 첨부파일 경로 :'))
-        id = str(input ('insert id :'))
-        wrtDt = str(input ('insert 작성일 :'))
-        AddBook({'제목':title, '첨부파일':fileUrl,'id':id, '작성일':wrtDt})
+#    elif menu == 'a':
+#        title = str(input ('insert 제목 :'))
+#        fileUrl = str(input ('insert 첨부파일 경로 :'))
+#        id = str(input ('insert id :'))
+#        wrtDt = str(input ('insert 작성일 :'))
+#        AddBook({'제목':title, '첨부파일':fileUrl,'id':id, '작성일':wrtDt})
     elif menu == 'p1':
         Print여행경보()
     elif menu == 'p2':
@@ -75,6 +77,26 @@ def launcherFunction(menu):
     elif menu == 'c':
         나라이름  = str(input ('연락처를 찾는 지역을 입력해주세요 :'))
         Print찾는나라연락처(나라이름)
+    elif menu=='u':
+        if 즐겨찾기나라=="현재없음":
+            print("즐겨찾기를 추가해주세요")
+        else:
+            Print찾는나라연락처(즐겨찾기나라)
+    elif menu =='m':
+        global 즐겨찾기나라
+        추가할나라=str(input ('추가 할 나라를입력하세요 :'))
+        tree = etree.parse('연락처정보.xml')
+    
+        root = tree.getroot()
+
+        for a in root.findall('body'):
+            for b in a.findall('items'):
+                for c in b.findall('item'):
+                    if c.findtext('countryName')==추가할나라:
+                     즐겨찾기나라 = 추가할나라
+                    
+                    if 즐겨찾기나라 == "현재없음":
+                        print("입력하신 국가가 없습니다")
     else:
         print ("error : unknow menu key")
 
@@ -196,7 +218,8 @@ def Print국가별공지사항():
         for a in root.findall('body'):
             for b in a.findall('items'):
                 for c in b.findall('item'):
-                    if c.findtext('title')==제목:
+                    이름=c.findtext('title')
+                    if 이름.find(제목):
                         print('제목 : ', c.findtext('title'))
                         print('첨부파일 경로 : ', c.findtext('fileUrl'))
                         print('id : ', c.findtext('id'))
@@ -228,6 +251,7 @@ def 지도url(지역):
     url= 'https://www.google.co.kr/maps/search/주+'+지역+'+대한민국+대사관'
     print(url)
 
+    
 ############### run ###############
 while(loopFlag > 0):
     printMenu()
